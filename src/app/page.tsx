@@ -44,7 +44,6 @@ export default function Home() {
         padding: "0 40px", display: "flex", alignItems: "center",
         justifyContent: "space-between", height: 64, position: "sticky", top: 0, zIndex: 100
       }}>
-        {/* Left — categories */}
         <div style={{ display: "flex", gap: 20 }}>
           {CATEGORIES.map(cat => (
             <button key={cat} onClick={() => setActiveCategory(cat)} style={{
@@ -52,19 +51,18 @@ export default function Home() {
               fontSize: 10, letterSpacing: 2, fontFamily: "sans-serif",
               color: activeCategory === cat ? "#2c4a3e" : "#9a8f85",
               fontWeight: activeCategory === cat ? "bold" : "normal",
-              textTransform: "uppercase", borderBottom: activeCategory === cat ? "2px solid #2c4a3e" : "2px solid transparent",
+              textTransform: "uppercase",
+              borderBottom: activeCategory === cat ? "2px solid #2c4a3e" : "2px solid transparent",
               paddingBottom: 4
             }}>{cat}</button>
           ))}
         </div>
 
-        {/* Center — blog name */}
         <h1 onClick={() => { setActiveCategory("ALL"); router.push("/") }}
           style={{ fontSize: 26, fontWeight: 400, color: "#2c4a3e", margin: 0, cursor: "pointer", letterSpacing: 3 }}>
           Njeri
         </h1>
 
-        {/* Right — pages + auth */}
         <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
           {["about", "travel-map", "social"].map(page => (
             <button key={page} onClick={() => router.push(`/${page}`)} style={{
@@ -109,7 +107,7 @@ export default function Home() {
       </div>
 
       {/* Posts Grid */}
-      <div style={{ maxWidth: 1100, margin: "50px auto", padding: "0 30px 60px" }}>
+      <div style={{ maxWidth: 1100, margin: "50px auto", padding: "0 30px 80px" }}>
         {filtered.length === 0 ? (
           <p style={{ textAlign: "center", color: "#9a8f85", fontStyle: "italic", padding: "60px 0" }}>No posts yet.</p>
         ) : (
@@ -153,22 +151,6 @@ export default function Home() {
             ))}
           </div>
         )}
-      </div>
-
-      {/* Explore Topics */}
-      <div style={{ background: "#fdf8f4", padding: "60px 30px", borderTop: "1px solid #e8e0d8" }}>
-        <h2 style={{ textAlign: "center", fontSize: 11, letterSpacing: 4, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 30 }}>
-          Explore Topics
-        </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, maxWidth: 1100, margin: "0 auto" }}>
-          {CATEGORIES.map(cat => (
-            <div key={cat} onClick={() => { setActiveCategory(cat); window.scrollTo(0, 0) }}
-              style={{ height: 180, background: "#ddd5c8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", inset: 0, background: "rgba(44,74,62,0.4)" }} />
-              <p style={{ position: "relative", color: "#fff", fontSize: 11, letterSpacing: 4, fontFamily: "sans-serif", textTransform: "uppercase" }}>{cat}</p>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Footer */}
