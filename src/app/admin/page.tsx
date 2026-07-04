@@ -36,14 +36,14 @@ export default function Admin() {
   async function saveAbout() {
     setSaving(true)
     await fetch("https://njeri-blog-backend.onrender.com/about", { method: "PUT", headers, body: JSON.stringify(about) })
-    setSaving(false); setMsg("About saved!")
+    setSaving(false); setMsg("About saved! ✓")
     setTimeout(() => setMsg(""), 3000)
   }
 
   async function saveSocial() {
     setSaving(true)
     await fetch("https://njeri-blog-backend.onrender.com/social", { method: "PUT", headers, body: JSON.stringify(social) })
-    setSaving(false); setMsg("Social saved!")
+    setSaving(false); setMsg("Social saved! ✓")
     setTimeout(() => setMsg(""), 3000)
   }
 
@@ -54,7 +54,8 @@ export default function Admin() {
       body: JSON.stringify({ ...newPin, latitude: parseFloat(newPin.latitude) || 0, longitude: parseFloat(newPin.longitude) || 0 })
     })
     setNewPin({ city: "", country: "", note: "", latitude: "", longitude: "" })
-    fetchAll()
+    fetchAll(); setMsg("Place added! ✓")
+    setTimeout(() => setMsg(""), 3000)
   }
 
   async function deletePin(id: number) {
@@ -67,30 +68,61 @@ export default function Admin() {
     fetchAll()
   }
 
-  const inputStyle = { padding: 10, fontSize: 14, border: "1px solid #e8e0d8", fontFamily: "Georgia, serif", width: "100%", background: "#fff", boxSizing: "border-box" as const }
-  const btnStyle = { padding: "10px 24px", background: "#2c4a3e", color: "#fff", border: "none", cursor: "pointer", fontSize: 12, letterSpacing: 2, fontFamily: "sans-serif", textTransform: "uppercase" as const }
-  const tabStyle = (active: boolean) => ({ padding: "10px 20px", background: active ? "#2c4a3e" : "none", color: active ? "#fff" : "#9a8f85", border: "1px solid #e8e0d8", cursor: "pointer", fontSize: 11, letterSpacing: 2, fontFamily: "sans-serif", textTransform: "uppercase" as const })
+  const inputStyle: any = {
+    padding: 12, fontSize: 14, border: "1px solid #e8e0d8",
+    fontFamily: "Georgia, serif", width: "100%", background: "#fff",
+    boxSizing: "border-box", outline: "none", color: "#3a3530"
+  }
+
+  const btnStyle: any = {
+    padding: "10px 24px", background: "#2c4a3e", color: "#fff",
+    border: "none", cursor: "pointer", fontSize: 10, letterSpacing: 2,
+    fontFamily: "sans-serif", textTransform: "uppercase"
+  }
+
+  const tabStyle = (active: boolean): any => ({
+    padding: "10px 22px",
+    background: active ? "#2c4a3e" : "#fff",
+    color: active ? "#fff" : "#9a8f85",
+    border: "1px solid #e8e0d8",
+    cursor: "pointer", fontSize: 10, letterSpacing: 2,
+    fontFamily: "sans-serif", textTransform: "uppercase"
+  })
 
   return (
     <main style={{ background: "#fdf8f4", minHeight: "100vh", fontFamily: "Georgia, serif" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 30px" }}>
 
-        {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 40 }}>
-          <div>
-            <h1 style={{ fontSize: 32, fontWeight: 400, color: "#2c4a3e", margin: 0 }}>Dashboard</h1>
-            <p style={{ fontSize: 12, color: "#9a8f85", fontFamily: "sans-serif", marginTop: 5 }}>Welcome back, Njeri</p>
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => router.push("/")} style={{ ...btnStyle, background: "none", color: "#2c4a3e", border: "1px solid #2c4a3e" }}>View Blog</button>
-            <button onClick={() => { localStorage.removeItem("token"); router.push("/") }} style={{ ...btnStyle, background: "#c0756a" }}>Logout</button>
-          </div>
+      {/* Header */}
+      <nav style={{ background: "#2c4a3e", padding: "0 40px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+        <div>
+          <span style={{ fontSize: 18, fontWeight: 400, color: "#fff", letterSpacing: 3 }}>Njeri</span>
+          <span style={{ fontSize: 10, color: "#9ecfc0", fontFamily: "sans-serif", letterSpacing: 2, textTransform: "uppercase", marginLeft: 16 }}>Dashboard</span>
+        </div>
+        <div style={{ display: "flex", gap: 12 }}>
+          <button onClick={() => router.push("/")} style={{ ...btnStyle, background: "transparent", border: "1px solid #9ecfc0", color: "#9ecfc0" }}>View Blog</button>
+          <button onClick={() => { localStorage.removeItem("token"); router.push("/") }} style={{ ...btnStyle, background: "#c0756a" }}>Logout</button>
+        </div>
+      </nav>
+
+      <div style={{ maxWidth: 920, margin: "0 auto", padding: "40px 30px" }}>
+
+        {/* Welcome */}
+        <div style={{ marginBottom: 35 }}>
+          <h1 style={{ fontSize: 28, fontWeight: 400, color: "#2c4a3e", margin: "0 0 6px" }}>Welcome back, Njeri</h1>
+          <p style={{ fontSize: 13, color: "#9a8f85", fontFamily: "sans-serif" }}>
+            {posts.length} posts · {pins.length} places visited
+          </p>
         </div>
 
-        {msg && <div style={{ background: "#2c4a3e", color: "#fff", padding: "10px 20px", marginBottom: 20, fontSize: 13, fontFamily: "sans-serif" }}>{msg}</div>}
+        {/* Success message */}
+        {msg && (
+          <div style={{ background: "#2c4a3e", color: "#fff", padding: "12px 20px", marginBottom: 24, fontSize: 13, fontFamily: "sans-serif", letterSpacing: 1 }}>
+            {msg}
+          </div>
+        )}
 
         {/* Tabs */}
-        <div style={{ display: "flex", gap: 5, marginBottom: 30, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 4, marginBottom: 30, flexWrap: "wrap" }}>
           {["posts", "about", "social", "travel"].map(t => (
             <button key={t} onClick={() => setTab(t)} style={tabStyle(tab === t)}>{t}</button>
           ))}
@@ -100,18 +132,35 @@ export default function Admin() {
         {tab === "posts" && (
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 400, color: "#2c4a3e" }}>All Posts ({posts.length})</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: 0, letterSpacing: 1 }}>
+                All Posts ({posts.length})
+              </h2>
               <button onClick={() => router.push("/create-post")} style={btnStyle}>+ New Post</button>
             </div>
+            {posts.length === 0 && (
+              <p style={{ color: "#9a8f85", fontStyle: "italic", padding: "40px 0" }}>No posts yet. Create your first one!</p>
+            )}
             {posts.map(post => (
-              <div key={post.id} style={{ background: "#fff", border: "1px solid #e8e0d8", padding: 20, marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 5 }}>{post.category}</p>
-                  <h3 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: 0 }}>{post.title}</h3>
+              <div key={post.id} style={{
+                background: "#fff", border: "1px solid #e8e0d8",
+                padding: "18px 24px", marginBottom: 8,
+                display: "flex", justifyContent: "space-between", alignItems: "center"
+              }}>
+                <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                  {post.image_url && (
+                    <img src={post.image_url} alt={post.title}
+                      style={{ width: 56, height: 56, objectFit: "cover", background: "#e8e0d8" }} />
+                  )}
+                  <div>
+                    <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 4 }}>{post.category}</p>
+                    <h3 style={{ fontSize: 15, fontWeight: 400, color: "#2c4a3e", margin: 0 }}>{post.title}</h3>
+                  </div>
                 </div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <button onClick={() => router.push(`/edit-post/${post.id}`)} style={{ ...btnStyle, background: "none", color: "#2c4a3e", border: "1px solid #2c4a3e" }}>Edit</button>
-                  <button onClick={() => deletePost(post.id)} style={{ ...btnStyle, background: "#c0756a" }}>Delete</button>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => router.push(`/edit-post/${post.id}`)}
+                    style={{ ...btnStyle, background: "none", color: "#2c4a3e", border: "1px solid #2c4a3e" }}>Edit</button>
+                  <button onClick={() => deletePost(post.id)}
+                    style={{ ...btnStyle, background: "#c0756a" }}>Delete</button>
                 </div>
               </div>
             ))}
@@ -120,52 +169,98 @@ export default function Admin() {
 
         {/* ABOUT TAB */}
         {tab === "about" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 400, color: "#2c4a3e" }}>About Me</h2>
-            <input placeholder="Photo URL" value={about.photo_url || ""} onChange={e => setAbout({ ...about, photo_url: e.target.value })} style={inputStyle} />
-            <textarea placeholder="Bio — tell your story..." value={about.bio || ""} onChange={e => setAbout({ ...about, bio: e.target.value })} rows={5} style={{ ...inputStyle, lineHeight: 1.8 }} />
-            <textarea placeholder="Favorites — favorite city, food, book, film..." value={about.favorites || ""} onChange={e => setAbout({ ...about, favorites: e.target.value })} rows={3} style={{ ...inputStyle, lineHeight: 1.8 }} />
-            <input placeholder="Contact email" value={about.email || ""} onChange={e => setAbout({ ...about, email: e.target.value })} style={inputStyle} />
-            <button onClick={saveAbout} disabled={saving} style={btnStyle}>{saving ? "Saving..." : "Save About"}</button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: "0 0 10px", letterSpacing: 1 }}>About Me</h2>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 6 }}>Profile Photo URL</p>
+              <input placeholder="Paste an image URL..." value={about.photo_url || ""}
+                onChange={e => setAbout({ ...about, photo_url: e.target.value })} style={inputStyle} />
+            </div>
+            {about.photo_url && (
+              <img src={about.photo_url} alt="Preview" style={{ width: 120, height: 120, objectFit: "cover" }} />
+            )}
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 6 }}>Bio</p>
+              <textarea placeholder="Tell your story..." value={about.bio || ""}
+                onChange={e => setAbout({ ...about, bio: e.target.value })}
+                rows={6} style={{ ...inputStyle, lineHeight: 1.9 }} />
+            </div>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 6 }}>Favorites</p>
+              <textarea placeholder="Favorite city, food, book, film..." value={about.favorites || ""}
+                onChange={e => setAbout({ ...about, favorites: e.target.value })}
+                rows={4} style={{ ...inputStyle, lineHeight: 1.9 }} />
+            </div>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 6 }}>Contact Email</p>
+              <input placeholder="your@email.com" value={about.email || ""}
+                onChange={e => setAbout({ ...about, email: e.target.value })} style={inputStyle} />
+            </div>
+            <button onClick={saveAbout} disabled={saving} style={{ ...btnStyle, marginTop: 6 }}>
+              {saving ? "Saving..." : "Save About"}
+            </button>
           </div>
         )}
 
         {/* SOCIAL TAB */}
         {tab === "social" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 15 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 400, color: "#2c4a3e" }}>Social Links</h2>
-            <input placeholder="Instagram handle e.g. @njeri" value={social.instagram || ""} onChange={e => setSocial({ ...social, instagram: e.target.value })} style={inputStyle} />
-            <input placeholder="TikTok handle e.g. @njeri" value={social.tiktok || ""} onChange={e => setSocial({ ...social, tiktok: e.target.value })} style={inputStyle} />
-            <input placeholder="Twitter/X handle e.g. @njeri" value={social.twitter || ""} onChange={e => setSocial({ ...social, twitter: e.target.value })} style={inputStyle} />
-            <button onClick={saveSocial} disabled={saving} style={btnStyle}>{saving ? "Saving..." : "Save Social"}</button>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: "0 0 10px", letterSpacing: 1 }}>Social Links</h2>
+            {[
+              { key: "instagram", label: "Instagram Handle" },
+              { key: "tiktok", label: "TikTok Handle" },
+              { key: "twitter", label: "Twitter / X Handle" },
+            ].map(item => (
+              <div key={item.key}>
+                <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 6 }}>{item.label}</p>
+                <input placeholder="@handle" value={social[item.key] || ""}
+                  onChange={e => setSocial({ ...social, [item.key]: e.target.value })} style={inputStyle} />
+              </div>
+            ))}
+            <button onClick={saveSocial} disabled={saving} style={{ ...btnStyle, marginTop: 6 }}>
+              {saving ? "Saving..." : "Save Social"}
+            </button>
           </div>
         )}
 
         {/* TRAVEL TAB */}
         {tab === "travel" && (
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 400, color: "#2c4a3e", marginBottom: 20 }}>Travel Map</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: "0 0 24px", letterSpacing: 1 }}>Travel Map</h2>
 
             {/* Add new pin */}
-            <div style={{ background: "#fff", border: "1px solid #e8e0d8", padding: 25, marginBottom: 25 }}>
-              <h3 style={{ fontSize: 13, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 15 }}>Add New Place</h3>
+            <div style={{ background: "#fff", border: "1px solid #e8e0d8", padding: 28, marginBottom: 28 }}>
+              <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 18 }}>Add New Place</p>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 }}>
-                <input placeholder="City" value={newPin.city} onChange={e => setNewPin({ ...newPin, city: e.target.value })} style={inputStyle} />
-                <input placeholder="Country" value={newPin.country} onChange={e => setNewPin({ ...newPin, country: e.target.value })} style={inputStyle} />
-                <input placeholder="Latitude (e.g. 48.8566)" value={newPin.latitude} onChange={e => setNewPin({ ...newPin, latitude: e.target.value })} style={inputStyle} />
-                <input placeholder="Longitude (e.g. 2.3522)" value={newPin.longitude} onChange={e => setNewPin({ ...newPin, longitude: e.target.value })} style={inputStyle} />
+                <input placeholder="City" value={newPin.city}
+                  onChange={e => setNewPin({ ...newPin, city: e.target.value })} style={inputStyle} />
+                <input placeholder="Country" value={newPin.country}
+                  onChange={e => setNewPin({ ...newPin, country: e.target.value })} style={inputStyle} />
+                <input placeholder="Latitude (e.g. 48.8566 for Paris)" value={newPin.latitude}
+                  onChange={e => setNewPin({ ...newPin, latitude: e.target.value })} style={inputStyle} />
+                <input placeholder="Longitude (e.g. 2.3522 for Paris)" value={newPin.longitude}
+                  onChange={e => setNewPin({ ...newPin, longitude: e.target.value })} style={inputStyle} />
               </div>
-              <textarea placeholder="A note about this place..." value={newPin.note} onChange={e => setNewPin({ ...newPin, note: e.target.value })} rows={3} style={{ ...inputStyle, marginBottom: 10 }} />
+              <textarea placeholder="A note about this place — what did it feel like?" value={newPin.note}
+                onChange={e => setNewPin({ ...newPin, note: e.target.value })}
+                rows={3} style={{ ...inputStyle, marginBottom: 12 }} />
               <button onClick={addPin} style={btnStyle}>Add Place</button>
             </div>
 
             {/* Existing pins */}
+            {pins.length === 0 && (
+              <p style={{ color: "#9a8f85", fontStyle: "italic" }}>No places yet. Add your first one above!</p>
+            )}
             {pins.map(pin => (
-              <div key={pin.id} style={{ background: "#fff", border: "1px solid #e8e0d8", padding: 20, marginBottom: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div key={pin.id} style={{
+                background: "#fff", border: "1px solid #e8e0d8",
+                padding: "18px 24px", marginBottom: 8,
+                display: "flex", justifyContent: "space-between", alignItems: "center"
+              }}>
                 <div>
                   <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 4 }}>{pin.country}</p>
-                  <h3 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: 0 }}>{pin.city}</h3>
-                  {pin.note && <p style={{ fontSize: 13, color: "#7a6f65", marginTop: 5 }}>{pin.note}</p>}
+                  <h3 style={{ fontSize: 16, fontWeight: 400, color: "#2c4a3e", margin: "0 0 4px" }}>{pin.city}</h3>
+                  {pin.note && <p style={{ fontSize: 13, color: "#7a6f65", margin: 0 }}>{pin.note.substring(0, 80)}...</p>}
                 </div>
                 <button onClick={() => deletePin(pin.id)} style={{ ...btnStyle, background: "#c0756a" }}>Remove</button>
               </div>
