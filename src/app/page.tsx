@@ -8,6 +8,7 @@ export default function Home() {
   const [posts, setPosts] = useState([])
   const [isAdmin, setIsAdmin] = useState(false)
   const [activeCategory, setActiveCategory] = useState("ALL")
+  const [menuOpen, setMenuOpen] = useState(false)
   const router = useRouter()
 
   async function getPosts() {
@@ -36,127 +37,132 @@ export default function Home() {
     : posts.filter((p: any) => p.category === activeCategory)
 
   return (
-    <main style={{ background: "#fff", minHeight: "100vh", fontFamily: "Georgia, serif" }}>
+    <main style={{ background: "#f5f0eb", minHeight: "100vh", fontFamily: "Georgia, serif" }}>
 
-      {/* Top Nav */}
-      <nav style={{
-        background: "#fdf8f4", borderBottom: "1px solid #e8e0d8",
-        padding: "0 40px", display: "flex", alignItems: "center",
-        justifyContent: "space-between", height: 64, position: "sticky", top: 0, zIndex: 100
-      }}>
-        <div style={{ display: "flex", gap: 20 }}>
+      {/* Top bar */}
+      <div style={{ display: "flex", justifyContent: "flex-end", padding: "20px 30px 0" }}>
+        <button onClick={() => setMenuOpen(!menuOpen)}
+          style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#3a3530" }}>
+          {menuOpen ? "✕" : "☰"}
+        </button>
+      </div>
+
+      {/* Dropdown Menu */}
+      {menuOpen && (
+        <div style={{
+          position: "absolute", right: 20, top: 55, background: "#fff",
+          padding: "30px 50px", boxShadow: "0 2px 20px rgba(0,0,0,0.08)",
+          textAlign: "left", zIndex: 100, minWidth: 200
+        }}>
+          {isAdmin && (
+            <p onClick={() => { router.push("/admin"); setMenuOpen(false) }}
+              style={{ fontSize: 16, margin: "10px 0", color: "#2c4a3e", cursor: "pointer", fontWeight: "bold" }}>
+              Dashboard
+            </p>
+          )}
+          <p onClick={() => { router.push("/about"); setMenuOpen(false) }}
+            style={{ fontSize: 18, margin: "12px 0", color: "#3a3530", cursor: "pointer" }}>About Me</p>
+          <p onClick={() => { router.push("/travel-map"); setMenuOpen(false) }}
+            style={{ fontSize: 18, margin: "12px 0", color: "#3a3530", cursor: "pointer" }}>Travel Map</p>
+          <p onClick={() => { router.push("/social"); setMenuOpen(false) }}
+            style={{ fontSize: 18, margin: "12px 0", color: "#3a3530", cursor: "pointer" }}>Social</p>
+          <hr style={{ margin: "15px 0", borderColor: "#ddd" }} />
           {CATEGORIES.map(cat => (
-            <button key={cat} onClick={() => setActiveCategory(cat)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontSize: 10, letterSpacing: 2, fontFamily: "sans-serif",
-              color: activeCategory === cat ? "#2c4a3e" : "#9a8f85",
-              fontWeight: activeCategory === cat ? "bold" : "normal",
-              textTransform: "uppercase",
-              borderBottom: activeCategory === cat ? "2px solid #2c4a3e" : "2px solid transparent",
-              paddingBottom: 4
-            }}>{cat}</button>
+            <p key={cat} onClick={() => { setActiveCategory(cat); setMenuOpen(false) }}
+              style={{ fontSize: 13, margin: "10px 0", color: "#3a3530", cursor: "pointer", letterSpacing: 2 }}>
+              {cat}
+            </p>
           ))}
-        </div>
-
-        <h1 onClick={() => { setActiveCategory("ALL"); router.push("/") }}
-          style={{ fontSize: 26, fontWeight: 400, color: "#2c4a3e", margin: 0, cursor: "pointer", letterSpacing: 3 }}>
-          Njeri
-        </h1>
-
-        <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
-          {["about", "travel-map", "social"].map(page => (
-            <button key={page} onClick={() => router.push(`/${page}`)} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontSize: 10, letterSpacing: 2, color: "#9a8f85",
-              fontFamily: "sans-serif", textTransform: "uppercase"
-            }}>{page === "travel-map" ? "Travel" : page}</button>
-          ))}
+          <hr style={{ margin: "15px 0", borderColor: "#ddd" }} />
           {isAdmin ? (
-            <>
-              <button onClick={() => router.push("/admin")} style={{
-                background: "#2c4a3e", border: "none", cursor: "pointer",
-                fontSize: 10, letterSpacing: 2, color: "#fff",
-                fontFamily: "sans-serif", textTransform: "uppercase", padding: "6px 14px"
-              }}>Dashboard</button>
-              <button onClick={() => { localStorage.removeItem("token"); setIsAdmin(false) }} style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 10, color: "#9a8f85", fontFamily: "sans-serif"
-              }}>Logout</button>
-            </>
+            <p onClick={() => { localStorage.removeItem("token"); setIsAdmin(false); setMenuOpen(false) }}
+              style={{ fontSize: 13, margin: "10px 0", color: "#9a8f85", cursor: "pointer" }}>Logout</p>
           ) : (
-            <button onClick={() => router.push("/login")} style={{
-              background: "none", border: "none", cursor: "pointer",
-              fontSize: 10, letterSpacing: 2, color: "#9a8f85",
-              fontFamily: "sans-serif", textTransform: "uppercase"
-            }}>Login</button>
+            <p onClick={() => { router.push("/login"); setMenuOpen(false) }}
+              style={{ fontSize: 13, margin: "10px 0", color: "#9a8f85", cursor: "pointer" }}>Login</p>
           )}
         </div>
-      </nav>
+      )}
 
-      {/* Hero */}
-      <div style={{ textAlign: "center", padding: "70px 20px 50px", background: "#fdf8f4", borderBottom: "1px solid #e8e0d8" }}>
-        <p style={{ fontSize: 11, letterSpacing: 4, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 16 }}>
-          A travel diary
+      {/* Header */}
+      <div style={{ textAlign: "center", padding: "30px 20px 10px" }}>
+        <h1 style={{ fontSize: 64, fontWeight: 400, letterSpacing: 2, color: "#3a3530", margin: "10px 0 5px" }}>
+          Njeri
+        </h1>
+        <p style={{ fontSize: 15, color: "#7a6f65", letterSpacing: 1, marginBottom: 30 }}>
+          A travel diary of places, interiors, clothes, food—and quiet personal shifts.
         </p>
-        <h2 style={{ fontSize: 38, fontWeight: 400, color: "#2c4a3e", margin: "0 0 16px", letterSpacing: 1 }}>
-          Places, interiors, clothes, food.
-        </h2>
-        <p style={{ fontSize: 15, color: "#7a6f65", maxWidth: 440, margin: "0 auto", lineHeight: 1.9 }}>
-          And quiet personal shifts.
-        </p>
+
+        <div style={{ maxWidth: 500, margin: "0 auto 30px", color: "#5a5048" }}>
+          <h2 style={{ fontWeight: 400, fontSize: 22 }}>A private record</h2>
+          <p style={{ lineHeight: 1.8, fontSize: 15 }}>
+            I started writing while moving through places quietly.<br />
+            <em>Not to remember where I went,<br />
+            but to notice who I was while I was there.</em>
+          </p>
+          <p style={{ fontSize: 16 }}>This is a record.</p>
+        </div>
+
+        {/* Category Nav */}
+        <div style={{ borderTop: "1px solid #c9bfb5", borderBottom: "1px solid #c9bfb5", padding: "12px 0", marginBottom: 40 }}>
+          <span style={{ display: "flex", justifyContent: "center", gap: 20, flexWrap: "wrap" }}>
+            {["ALL", ...CATEGORIES].map((cat, i, arr) => (
+              <span key={cat} style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <button onClick={() => setActiveCategory(cat)} style={{
+                  background: "none", border: "none", cursor: "pointer",
+                  fontSize: 12, letterSpacing: 2,
+                  color: activeCategory === cat ? "#3a3530" : "#9a8f85",
+                  fontWeight: activeCategory === cat ? "bold" : "normal",
+                  textTransform: "uppercase"
+                }}>{cat}</button>
+                {i < arr.length - 1 && <span style={{ color: "#c9bfb5" }}>·</span>}
+              </span>
+            ))}
+          </span>
+        </div>
       </div>
 
       {/* Posts Grid */}
-      <div style={{ maxWidth: 1100, margin: "50px auto", padding: "0 30px 80px" }}>
-        {filtered.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#9a8f85", fontStyle: "italic", padding: "60px 0" }}>No posts yet.</p>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "40px 30px" }}>
-            {filtered.map((post: any) => (
-              <div key={post.id}>
-                <div style={{ width: "100%", height: 250, overflow: "hidden", marginBottom: 14, background: "#e8e0d8" }}>
-                  {post.image_url
-                    ? <img src={post.image_url} alt={post.title}
-                        style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s" }}
-                        onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
-                        onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
-                    : <div style={{ width: "100%", height: "100%", background: "#e8e0d8" }} />
-                  }
-                </div>
-                <p style={{ fontSize: 10, letterSpacing: 2, color: "#9a8f85", fontFamily: "sans-serif", textTransform: "uppercase", marginBottom: 8 }}>
-                  {post.category}
-                </p>
-                <h3 style={{ fontSize: 17, fontWeight: 400, color: "#2c4a3e", margin: "0 0 10px", lineHeight: 1.5 }}>
-                  {post.title}
-                </h3>
-                <p style={{ fontSize: 13, color: "#7a6f65", marginBottom: 12, lineHeight: 1.7 }}>
-                  {post.content?.substring(0, 90)}...
-                </p>
-                <span style={{ fontSize: 12, color: "#2c4a3e", letterSpacing: 1, fontFamily: "sans-serif", cursor: "pointer" }}>
-                  Read more →
-                </span>
-                {isAdmin && (
-                  <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                    <button onClick={() => router.push(`/edit-post/${post.id}`)}
-                      style={{ background: "none", border: "none", fontSize: 11, color: "#9a8f85", cursor: "pointer", textDecoration: "underline", fontFamily: "sans-serif" }}>
-                      Edit
-                    </button>
-                    <button onClick={() => deletePost(post.id)}
-                      style={{ background: "none", border: "none", fontSize: 11, color: "#c0756a", cursor: "pointer", textDecoration: "underline", fontFamily: "sans-serif" }}>
-                      Delete
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: 30, maxWidth: 900, margin: "0 auto", padding: "0 20px 60px"
+      }}>
+        {filtered.length === 0 && (
+          <p style={{ color: "#9a8f85", fontStyle: "italic", gridColumn: "1/-1", textAlign: "center", padding: "60px 0" }}>
+            No posts yet.
+          </p>
         )}
+        {filtered.map((post: any) => (
+          <div key={post.id} style={{ cursor: "pointer" }}>
+            <div style={{ width: "100%", height: 260, background: "#ddd5c8", overflow: "hidden", marginBottom: 12 }}>
+              {post.image_url ? (
+                <img src={post.image_url} alt={post.title}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <div style={{ width: "100%", height: "100%", background: "#ddd5c8" }} />
+              )}
+            </div>
+            <p style={{ textAlign: "center", fontSize: 15, color: "#3a3530", margin: "0 0 8px" }}>{post.title}</p>
+            {isAdmin && (
+              <div style={{ display: "flex", justifyContent: "center", gap: 10 }}>
+                <button onClick={() => router.push(`/edit-post/${post.id}`)}
+                  style={{ background: "none", border: "none", fontSize: 12, color: "#9a8f85", cursor: "pointer", textDecoration: "underline" }}>
+                  Edit
+                </button>
+                <button onClick={() => deletePost(post.id)}
+                  style={{ background: "none", border: "none", fontSize: 12, color: "#c0756a", cursor: "pointer", textDecoration: "underline" }}>
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Footer */}
-      <footer style={{ textAlign: "center", padding: "30px 20px", borderTop: "1px solid #e8e0d8" }}>
-        <p style={{ fontSize: 11, color: "#9a8f85", fontFamily: "sans-serif", letterSpacing: 2 }}>
-          © 2024 NJERI · ALL RIGHTS RESERVED
+      <footer style={{ textAlign: "center", padding: "30px 20px", borderTop: "1px solid #c9bfb5" }}>
+        <p style={{ fontSize: 12, color: "#9a8f85", fontFamily: "sans-serif", letterSpacing: 1 }}>
+          © 2024 Njeri · All rights reserved
         </p>
       </footer>
     </main>
