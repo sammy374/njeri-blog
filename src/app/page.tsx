@@ -12,14 +12,14 @@ export default function Home() {
   const router = useRouter()
 
   async function getPosts() {
-    const res = await fetch("https://njeri-blog-backend.onrender.com/posts")
+    const res = await fetch("https://njeri-blog-backend-docker.onrender.com/posts")
     const data = await res.json()
     setPosts(data)
   }
 
   async function deletePost(id: number) {
     const token = localStorage.getItem("token")
-    await fetch(`https://njeri-blog-backend.onrender.com/posts/${id}`, {
+    await fetch(`https://njeri-blog-backend-docker.onrender.com/posts/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     })

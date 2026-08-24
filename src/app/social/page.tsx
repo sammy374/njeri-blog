@@ -7,7 +7,7 @@ export default function Social() {
   const router = useRouter()
 
   useEffect(() => {
-    fetch("https://njeri-blog-backend.onrender.com/social")
+    fetch("https://njeri-blog-backend-docker.onrender.com/social")
       .then(r => r.json())
       .then(setSocial)
   }, [])

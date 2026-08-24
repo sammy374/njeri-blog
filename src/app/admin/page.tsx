@@ -25,31 +25,31 @@ export default function Admin() {
 
   async function fetchAll() {
     const [p, a, s, t] = await Promise.all([
-      fetch("https://njeri-blog-backend.onrender.com/posts").then(r => r.json()),
-      fetch("https://njeri-blog-backend.onrender.com/about").then(r => r.json()),
-      fetch("https://njeri-blog-backend.onrender.com/social").then(r => r.json()),
-      fetch("https://njeri-blog-backend.onrender.com/travel").then(r => r.json()),
+      fetch("https://njeri-blog-backend-docker.onrender.com/posts").then(r => r.json()),
+      fetch("https://njeri-blog-backend-docker.onrender.com/about").then(r => r.json()),
+      fetch("https://njeri-blog-backend-docker.onrender.com/social").then(r => r.json()),
+      fetch("https://njeri-blog-backend-docker.onrender.com/travel").then(r => r.json()),
     ])
     setPosts(p); setAbout(a); setSocial(s); setPins(t)
   }
 
   async function saveAbout() {
     setSaving(true)
-    await fetch("https://njeri-blog-backend.onrender.com/about", { method: "PUT", headers, body: JSON.stringify(about) })
+    await fetch("https://njeri-blog-backend-docker.onrender.com/about", { method: "PUT", headers, body: JSON.stringify(about) })
     setSaving(false); setMsg("About saved! ✓")
     setTimeout(() => setMsg(""), 3000)
   }
 
   async function saveSocial() {
     setSaving(true)
-    await fetch("https://njeri-blog-backend.onrender.com/social", { method: "PUT", headers, body: JSON.stringify(social) })
+    await fetch("https://njeri-blog-backend-docker.onrender.com/social", { method: "PUT", headers, body: JSON.stringify(social) })
     setSaving(false); setMsg("Social saved! ✓")
     setTimeout(() => setMsg(""), 3000)
   }
 
   async function addPin() {
     if (!newPin.city || !newPin.country) return
-    await fetch("https://njeri-blog-backend.onrender.com/travel", {
+    await fetch("https://njeri-blog-backend-docker.onrender.com/travel", {
       method: "POST", headers,
       body: JSON.stringify({ ...newPin, latitude: parseFloat(newPin.latitude) || 0, longitude: parseFloat(newPin.longitude) || 0 })
     })
@@ -59,12 +59,12 @@ export default function Admin() {
   }
 
   async function deletePin(id: number) {
-    await fetch(`https://njeri-blog-backend.onrender.com/travel/${id}`, { method: "DELETE", headers })
+    await fetch(`https://njeri-blog-backend-docker.onrender.com/travel/${id}`, { method: "DELETE", headers })
     fetchAll()
   }
 
   async function deletePost(id: number) {
-    await fetch(`https://njeri-blog-backend.onrender.com/posts/${id}`, { method: "DELETE", headers })
+    await fetch(`https://njeri-blog-backend-docker.onrender.com/posts/${id}`, { method: "DELETE", headers })
     fetchAll()
   }
 
