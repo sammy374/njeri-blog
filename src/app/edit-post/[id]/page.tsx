@@ -11,7 +11,7 @@ export default function EditPost() {
 
   useEffect(() => {
     async function fetchPost() {
-      const res = await fetch(`https://njeri-blog-backend-docker.onrender.com/posts/${id}`)
+      const res = await fetch(`https://njeri-blog-backend.onrender.com/posts/${id}`)
       const data = await res.json()
       setTitle(data.title)
       setContent(data.content)
@@ -22,7 +22,7 @@ export default function EditPost() {
   async function handleUpdate() {
     setLoading(true)
     const token = localStorage.getItem("token")
-    await fetch(`https://njeri-blog-backend-docker.onrender.com/posts/${id}`, {
+    await fetch(`https://njeri-blog-backend.onrender.com/posts/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,7 @@ export default function About() {
   const router = useRouter()
 
   useEffect(() => {
-    fetch("https://njeri-blog-backend-docker.onrender.com/about")
+    fetch("https://njeri-blog-backend.onrender.com/about")
       .then(r => r.json())
       .then(setAbout)
   }, [])

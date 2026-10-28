@@ -8,7 +8,7 @@ export default function TravelMap() {
   const router = useRouter()
 
   useEffect(() => {
-    fetch("https://njeri-blog-backend-docker.onrender.com/travel")
+    fetch("https://njeri-blog-backend.onrender.com/travel")
       .then(r => r.json())
       .then(setPins)
   }, [])

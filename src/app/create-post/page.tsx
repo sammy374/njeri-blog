@@ -15,7 +15,7 @@ export default function CreatePost() {
   async function handleSubmit() {
     setLoading(true)
     const token = localStorage.getItem("token")
-    await fetch("https://njeri-blog-backend-docker.onrender.com/posts", {
+    await fetch("https://njeri-blog-backend.onrender.com/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ title, content, category, image_url: imageUrl }),
